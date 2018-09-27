@@ -33,7 +33,7 @@ if ($yn == '0') {
     }
 }
 
-my $SoftwareDir = './Software/';
+my $SoftwareDir = '../Software/';
 mkdir($SoftwareDir, 0700) unless(-d $SoftwareDir);
 chdir($SoftwareDir) or die "can't chdir $SoftwareDir\n";
 

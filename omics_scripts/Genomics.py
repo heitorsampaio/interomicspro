@@ -20,9 +20,9 @@ parser.add_argument("-rg", dest="READ_GROUP", required=True,
 
 parser.add_argument("-s", dest="SAMPLE_NAME", required=True,
                     help="Sample Name")
-parser.add_argument("-lib", dest="LIB_NAME", required=True,
+parser.add_argument("-lib", dest="LIB_NAME", required=False,
                     help="Library Name")
-parser.add_argument("-p", dest="PLATFORM", required=True,
+parser.add_argument("-p", dest="PLATFORM", required=False,
                     help="Platform Name")
 args = parser.parse_args()
 
@@ -35,17 +35,20 @@ print(args.SAMPLE_NAME)
 print(args.LIB_NAME)
 print(args.PLATFORM)
 
-call([
+
+run1 = call([
     "java", 
     "-Xmx64G", 
     "-jar", 
-    "./Software/picard.jar", 
+    "../Software/picard.jar", 
     "FastqToSam", 
     "FASTQ=",(args.FASTQ) , 
     "FASTQ2=", (args.FASTQ2), 
     "OUTPUT=",(args.OUTPUT), 
-    "READ_GROUP_NAME=", (args.READ_GROUP),
-    "SAMPLE_NAME=", (args.SAMPLE_NAME),
-    "LIBRARY_NAME=", (args.LIB_NAME),
-    "PLATFORM=", (args.PLATFORM)
+    "READ_GROUP_NAME=",(args.READ_GROUP),
+    "SAMPLE_NAME=",(args.SAMPLE_NAME),
+    "LIBRARY_NAME=SureSelectXT_Human_All_Exon_V6+UTRs",
+    "PLATFORM=ILLUMINA",
+   # call([">" "log.log"])
     ])
+
