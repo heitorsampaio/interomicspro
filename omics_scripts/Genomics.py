@@ -1,3 +1,4 @@
+
 from subprocess import call
 import os
 import sys
@@ -35,6 +36,12 @@ print(args.SAMPLE_NAME)
 print(args.LIB_NAME)
 print(args.PLATFORM)
 
+##Generate an unmapped BAM from FASTQ or aligned BAM
+print('''
+[+][+][+]
+Generate an unmapped BAM from FASTQ or aligned BAM!!
+[+][+][+]
+''')
 
 run1 = call([
     "java", 
@@ -52,3 +59,71 @@ run1 = call([
    # call([">" "log.log"])
     ])
 
+print('''
+[+][+][+]
+Map and clean up short read sequence data!!
+[+][+][+]
+''')
+
+run2 = call([
+    "java", 
+    "-Xmx64G", 
+    "-jar", 
+    "../Software/picard.jar", 
+    "MarkIlluminaAdapters", 
+    "I=",(args.OUTPUT),
+    "O=",(args.SAMPLE_NAME+"_adapmark.bam"),
+    "M=",(args.SAMPLE_NAME+"_adapmark_metrics.txt"),
+    "TMP_DIR=./tmp"
+    ])
+
+
+run3 = call([
+    "java", 
+    "-Xmx64G", 
+    "-jar", 
+    "../Software/picard.jar", 
+    "SamToFastq", 
+    "I=",(args.SAMPLE_NAME+"_adapmark.bam"),
+    "FASTQ=",(args.SAMPLE_NAME+"_samtofastq.bam"),
+    "CLIPPING_ATTRIBUTE=XT",
+    "CLIPPING_ACTION=2",
+    "INTERLEAVE=true",
+    "NON_PF=true",
+    ])
+
+run4 = call([
+    "bwa",
+    "mem",
+    "-M",
+    "-t 20",
+    "-p genome.fa",
+    (args.SAMPLE_NAME+"_samtofastq.bam")
+])
+
+print('''
+[+][+][+]
+Merge files of the same sample!!
+[+][+][+]
+''')
+
+run5 = call([
+    "java", 
+    "-Xmx64G", 
+    "-jar", 
+    "../Software/picard.jar",
+    "MergeBamAlignment",
+    "ALIGNED_BAM=",(args.SAMPLE_NAME+"_samtofastq.bam"),
+    "UNMAPPED_BAM=",(args.OUTPUT),
+    "OUTPUT=",(args.SAMPLE_NAME+"_piped.bam"),
+    "R=genome.fa",
+    "CREATE_INDEX=true",
+    "ADD_MATE_CIGAR=true",
+    "CLIP_ADAPTERS=false",
+    "CLIP_OVERLAPPING_READS=true",
+    "INCLUDE_SECONDARY_ALIGNMENTS=true",
+    "MAX_INSERTIONS_OR_DELETIONS=-1",
+    "PRIMARY_ALIGNMENT_STRATEGY=MostDistant",
+    "ATTRIBUTES_TO_RETAIN=XS",
+    "TMP_DIR=./temp"
+])
