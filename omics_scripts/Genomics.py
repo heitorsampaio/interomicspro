@@ -36,9 +36,9 @@ print(args.SAMPLE_NAME)
 print(args.LIB_NAME)
 print(args.PLATFORM)
 
-anal = "./Analysis/"
+anal = "../Analysis/"
 
-os.mkdir( anal, 0o755 );
+os.mkdir( anal, 0o755 )
 
 print("Analysis path is created")
 
@@ -104,7 +104,24 @@ run3 = call([
     "NON_PF=true",
     ])
 
-path = ("../Genomes/Homo_sapiens/NCBI/GRCh38/Sequence/BWAIndex/genome.fa")
+homChoice = ['H.sapiens', 'human']
+musChoice = ['M.musculus']
+ratChoice = ['R.norvegicus']
+droChoice = ['D.melanogaster']
+
+genome = input('''
+Which reference genome you want to download? [H.sapiens/M.musculus/R.norvegicus/D.melanogaster]
+
+:''' )
+
+if genome in homChoice:
+    path = ("../Genomes/Homo_sapiens/NCBI/build37.2/Sequence/BWAIndex/genome.fa")
+elif genome in musChoice:
+    path = ("../Genomes/Mus_musculus/NCBI/build37.2/Sequence/BWAIndex/genome.fa")
+if genome in ratChoice:
+    path = ("../Genomes/Rattus_norvegicus/NCBI/Rnor_6.0/Sequence/BWAIndex/genome.fa")
+elif genome in droChoice:
+    path = ("../Genomes/Drosophila_melanogaster/NCBI/build5.41/Sequence/BWAIndex/genome.fa")
 
 run4 = call([
     "bwa",
@@ -161,6 +178,38 @@ print('''
 Recalibrate base quality scores!!
 [+][+][+]
 ''')
+
+dbSnp = "../dbSNP/"
+os.mkdir( dbSnp, 0o755 )
+
+print("dbSNP path is created")
+
+os.chdir( dbSnp )
+
+retval = os.getcwd()
+
+print("Directory changes successfully %s" % retval)
+
+call([
+    "wget",
+    "ftp://ftp.ncbi.nlm.nih.gov/snp/organisms/human_9606_b151_GRCh38p7/VCF/GATK/All_20180418.vcf.gz"
+])
+
+call ([
+    "unzip",
+    "All_20180418.vcf.gz"
+])
+
+call ([
+    "rm",
+    "All_20180418.vcf.gz"
+])
+
+os.chdir( anal )
+
+retval = os.getcwd()
+
+print("Directory changes successfully %s" % retval)
 
 run7 = call([
     "python3",
@@ -338,7 +387,7 @@ Generate files with only PASSED variants!!
 run19 = call([
     "vcftools",
     "--vcf",(args.SAMPLE_NAME+"_filtered_snps.vcf"),
-    "--keep-filtered"'''"PASS"''',
+    "--keep-filtered",'''"PASS"''',
     "--recode",
     "--out",(args.SAMPLE_NAME+"_passed_snps")
 ])
@@ -346,7 +395,7 @@ run19 = call([
 run20 = call([
     "vcftools",
     "--vcf",(args.SAMPLE_NAME+"_filtered_indels.vcf"),
-    "--keep-filtered"'''"PASS"''',
+    "--keep-filtered",'''"PASS"''',
     "--recode",
     "--out",(args.SAMPLE_NAME+"_passed_indels")
 ])
