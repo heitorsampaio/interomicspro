@@ -61,6 +61,16 @@ if EnterOp == "1":
 
 elif EnterOp == "2":
     call([
+        "sudo",
+        "apt-get",
+        "install",
+        "wget",
+        "unzip",
+        "tar",
+        "perl",
+        "libarchive-extract-perl"
+    ])
+    call([
         "perl",
         "./omics_install/transcriptomics.pl"
     ])
@@ -68,6 +78,16 @@ elif EnterOp == "2":
     input("[*] Back To Menu (Press Enter...) ")
 
 elif EnterOp == "3":
+    call([
+        "sudo",
+        "apt-get",
+        "install",
+        "wget",
+        "unzip",
+        "tar",
+        "perl",
+        "libarchive-extract-perl"
+    ])
     call([
         "perl",
         "./omics_install/proteomics.pl"
@@ -77,6 +97,16 @@ elif EnterOp == "3":
 
 elif EnterOp == "4":
     call([
+        "sudo",
+        "apt-get",
+        "install",
+        "wget",
+        "unzip",
+        "tar",
+        "perl",
+        "libarchive-extract-perl"
+    ])
+    call([
         "python3",
         "./omics_install/genome_download.py"
     ])
@@ -84,6 +114,16 @@ elif EnterOp == "4":
     input("[*] Back To Menu (Press Enter...) ")
 
 elif EnterOp == "5":
+    call([
+        "sudo",
+        "apt-get",
+        "install",
+        "wget",
+        "unzip",
+        "tar",
+        "perl",
+        "libarchive-extract-perl"
+    ])
     dbSnp = "./dbSNP/"
     home = "../"
     os.mkdir( dbSnp, 0o755 )
@@ -115,6 +155,16 @@ elif EnterOp == "5":
     input("[*] Back To Menu (Press Enter...) ")
 
 elif EnterOp == "6":
+    call([
+        "sudo",
+        "apt-get",
+        "install",
+        "wget",
+        "unzip",
+        "tar",
+        "perl",
+        "libarchive-extract-perl"
+    ])
     call([
         "perl",
         "./omics_install/genomics.pl"
