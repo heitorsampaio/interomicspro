@@ -41,6 +41,11 @@ Enter :
 git clone https://github.com/heitorsampaio/interomicspro.git
 cd interomicspro
 python3 install.py 
+```
+## Usage
+```bash
+python3 run.py
+```
 
 ## ScreenShot
 ![InterOmicsPro](https://i.imgur.com/DWluANG.png)
