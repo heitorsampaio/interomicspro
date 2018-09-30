@@ -2,20 +2,8 @@ from subprocess import call
 import os
 import sys
 
-print ( '''
-██████╗  █████╗ ████████╗ ██████╗ ███████╗███╗   ██╗
-██╔══██╗██╔══██╗╚══██╔══╝██╔════╝ ██╔════╝████╗  ██║
-██████╔╝███████║   ██║   ██║  ███╗█████╗  ██╔██╗ ██║
-██╔═══╝ ██╔══██║   ██║   ██║   ██║██╔══╝  ██║╚██╗██║
-██║     ██║  ██║   ██║   ╚██████╔╝███████╗██║ ╚████║
-╚═╝     ╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚══════╝╚═╝  ╚═══╝
-       Patologia Molecular e Medicina Genômica
-                                                coded by Heitor Sampaio;\n
 
-'''
-)
-
-path = "../Genomes/"
+path = "./Genomes/"
 
 os.mkdir( path, 0o755 );
 
@@ -33,12 +21,11 @@ homChoice = ['H.sapiens', 'human']
 musChoice = ['M.musculus']
 ratChoice = ['R.norvegicus']
 droChoice = ['D.melanogaster']
-quiChoice = ['Quit','quit']
 
 genome = input('''
-Which reference genome you want to download? [H.sapiens/M.musculus/R.norvegicus/D.melanogaster or Quit]
+Which reference genome you want to download? [H.sapiens/M.musculus/R.norvegicus/D.melanogaster]
 
-:''' )
+Enter:''' )
 
 
 

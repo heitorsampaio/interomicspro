@@ -5,35 +5,8 @@ use warnings;
 use Archive::Extract;
 use Archive::Tar;
 use File::Copy;
-use IO::Uncompress::Unzip qw(unzip $UnzipError) ;
-use Term::ANSIColor qw(:constants);
 
-print BLUE, "
-██████╗  █████╗ ████████╗ ██████╗ ███████╗███╗   ██╗
-██╔══██╗██╔══██╗╚══██╔══╝██╔════╝ ██╔════╝████╗  ██║
-██████╔╝███████║   ██║   ██║  ███╗█████╗  ██╔██╗ ██║
-██╔═══╝ ██╔══██║   ██║   ██║   ██║██╔══╝  ██║╚██╗██║
-██║     ██║  ██║   ██║   ╚██████╔╝███████╗██║ ╚████║
-╚═╝     ╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚══════╝╚═╝  ╚═══╝
-       Patologia Molecular e Medicina Genômica
-                                                coded by Heitor Sampaio;\n", RESET;
-
-
-
-print "+++ This script will install all necessary Genomics softwares for InterOmics PRO \n";
-
-print "Do you want to proceed? (Yes(1)/No(0)) ";
-my $yn = <STDIN>;
-if ($yn == '0') {
-    print "Exiting\n";
-    exit;
-} else {
-    if ($yn == "1") {
-        
-    }
-}
-
-my $SoftwareDir = '../Software/';
+my $SoftwareDir = './Software/';
 mkdir($SoftwareDir, 0700) unless(-d $SoftwareDir);
 chdir($SoftwareDir) or die "can't chdir $SoftwareDir\n";
 
