@@ -43,6 +43,16 @@ EnterOp = input("Enter : ")
 
 if EnterOp == "1":
     call([
+        "sudo",
+        "apt-get",
+        "install",
+        "wget",
+        "unzip",
+        "tar",
+        "perl",
+        "libarchive-extract-perl"
+    ])
+    call([
         "perl",
         "./omics_install/genomics.pl"
     ])
