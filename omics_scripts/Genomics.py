@@ -115,13 +115,13 @@ Which reference genome you want to use? [H.sapiens/M.musculus/R.norvegicus/D.mel
 :''' )
 
 if genome in homChoice:
-    path = ("../Senomes/Homo_sapiens/NCBI/build37.2/Sequence/BWAIndex/genome.fa")
+    path = ("../Genomes/Homo_sapiens/NCBI/build37.2/Sequence/BWAIndex/genome.fa")
 elif genome in musChoice:
-    path = ("../Senomes/Mus_musculus/NCBI/build37.2/Sequence/BWAIndex/genome.fa")
+    path = ("../Genomes/Mus_musculus/NCBI/build37.2/Sequence/BWAIndex/genome.fa")
 elif genome in ratChoice:
-    path = ("../Senomes/Rattus_norvegicus/NCBI/Rnor_6.0/Sequence/BWAIndex/genome.fa")
+    path = ("../Genomes/Rattus_norvegicus/NCBI/Rnor_6.0/Sequence/BWAIndex/genome.fa")
 elif genome in droChoice:
-    path = ("../Senomes/Drosophila_melanogaster/NCBI/build5.41/Sequence/BWAIndex/genome.fa")
+    path = ("../Genomes/Drosophila_melanogaster/NCBI/build5.41/Sequence/BWAIndex/genome.fa")
 
 run4 = call([
     "bwa",

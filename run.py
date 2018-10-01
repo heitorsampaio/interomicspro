@@ -45,7 +45,7 @@ if EnterOp == '1':
     fastq2 = input("Insert your FASTQ two Location : ")
     rgName = input("Insert your Read Group name [Ex.:L001] : ")
     sampName = input("Insert your Sample Name [Ex.:SRR] : ")
-    outName = input("Insert your Output name : ")
+    outName = input("Insert your Output name [Ex.:Filename.bam]: ")
 
     call ([
         "python3",
