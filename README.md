@@ -1,5 +1,7 @@
 # InterOmics PRO
 
+![InterOmicsPrologo](https://i.imgur.com/GjTojs7.png)
+
 A suite to analyse and integrate datas of Genomics, Transcriptomics and Proteomics.
 
 ## PreView
