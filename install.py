@@ -137,20 +137,96 @@ elif EnterOp == "5":
     print("Directory changes successfully %s" % retval)
     call([
     "wget",
-    "ftp://ftp.ncbi.nlm.nih.gov/snp/organisms/human_9606_b151_GRCh38p7/VCF/GATK/All_20180418.vcf.gz"
+    "ftp://ftp.ncbi.nlm.nih.gov/snp/organisms/human_9606_b151_GRCh38p7/VCF/GATK/00-All.vcf.gz"
     ])
+
     call ([
-    "unzip",
-    "All_20180418.vcf.gz"
+    "gzip",
+    "-d",
+    "00-All.vcf.gz"
     ])
+
     call ([
     "rm",
-    "All_20180418.vcf.gz"
+    "00-All.vcf.gz"
     ])
-    call ([
-        "cd",
-        ".."
+
+    call([
+        "wget",
+        "https://storage.googleapis.com/genomics-public-data/resources/broad/hg38/v0/Mills_and_1000G_gold_standard.indels.hg38.vcf.gz"
     ])
+
+    call([
+        "gzip",
+        "-d",
+        "Mills_and_1000G_gold_standard.indels.hg38.vcf.gz"
+    ])
+
+    call([
+        "rm",
+        "Mills_and_1000G_gold_standard.indels.hg38.vcf.gz"
+    ])
+
+    call([
+        "mv",
+        "Mills_and_1000G_gold_standard.indels.hg38.vcf",
+        "Mills_1kg_indels_hg38.vcf"
+    ])
+
+    call([
+        "wget",
+        "https://storage.googleapis.com/genomics-public-data/resources/broad/hg38/v0/Homo_sapiens_assembly38.known_indels.vcf.gz"
+    ])
+
+    call([
+        "gzip",
+        "-d",
+        "Homo_sapiens_assembly38.known_indels.vcf.gz"
+    ])
+
+    call([
+        "rm",
+        "Homo_sapiens_assembly38.known_indels.vcf.gz"
+    ])
+
+    call([
+        "mv",
+        "Homo_sapiens_assembly38.known_indels.vcf",
+        "hsa_indels_hg38.vcf"
+    ])
+
+    call([
+        "wget",
+        "https://storage.googleapis.com/genomics-public-data/resources/broad/hg38/v0/1000G_phase1.snps.high_confidence.hg38.vcf.gz"
+    ])
+
+    call([
+        "gzip",
+        "-d",
+        "1000G_phase1.snps.high_confidence.hg38.vcf.gz"
+    ])
+
+    call([
+        "rm",
+        "1000G_phase1.snps.high_confidence.hg38.vcf.gz"
+    ])
+
+    call([
+        "wget",
+        "https://storage.googleapis.com/genomics-public-data/resources/broad/hg38/v0/1000G_omni2.5.hg38.vcf.gz"
+    ])
+
+    call([
+        "gzip",
+        "-d",
+        "1000G_omni2.5.hg38.vcf.gz"
+    ])
+
+    call([
+        "rm",
+        "1000G_omni2.5.hg38.vcf.gz"
+    ])
+
     print ("\n")
     input("[*] Back To Menu (Press Enter...) ")
 
@@ -195,21 +271,94 @@ elif EnterOp == "6":
 
     call([
     "wget",
-    "ftp://ftp.ncbi.nlm.nih.gov/snp/organisms/human_9606_b151_GRCh38p7/VCF/GATK/All_20180418.vcf.gz"
+    "ftp://ftp.ncbi.nlm.nih.gov/snp/organisms/human_9606_b151_GRCh38p7/VCF/GATK/00-All.vcf.gz"
     ])
 
     call ([
-    "unzip",
-    "All_20180418.vcf.gz"
+    "gzip",
+    "-d",
+    "00-All.vcf.gz"
     ])
 
     call ([
     "rm",
-    "All_20180418.vcf.gz"
+    "00-All.vcf.gz"
     ])
-    call ([
-        "cd",
-        ".."
+
+    call([
+        "wget",
+        "https://storage.googleapis.com/genomics-public-data/resources/broad/hg38/v0/Mills_and_1000G_gold_standard.indels.hg38.vcf.gz"
+    ])
+
+    call([
+        "gzip",
+        "-d",
+        "Mills_and_1000G_gold_standard.indels.hg38.vcf.gz"
+    ])
+
+    call([
+        "rm",
+        "Mills_and_1000G_gold_standard.indels.hg38.vcf.gz"
+    ])
+
+    call([
+        "mv",
+        "Mills_and_1000G_gold_standard.indels.hg38.vcf",
+        "Mills_1kg_indels_hg38.vcf"
+    ])
+
+    call([
+        "wget",
+        "https://storage.googleapis.com/genomics-public-data/resources/broad/hg38/v0/Homo_sapiens_assembly38.known_indels.vcf.gz"
+    ])
+
+    call([
+        "gzip",
+        "-d",
+        "Homo_sapiens_assembly38.known_indels.vcf.gz"
+    ])
+
+    call([
+        "rm",
+        "Homo_sapiens_assembly38.known_indels.vcf.gz"
+    ])
+
+    call([
+        "mv",
+        "Homo_sapiens_assembly38.known_indels.vcf",
+        "hsa_indels_hg38.vcf"
+    ])
+
+    call([
+        "wget",
+        "https://storage.googleapis.com/genomics-public-data/resources/broad/hg38/v0/1000G_phase1.snps.high_confidence.hg38.vcf.gz"
+    ])
+
+    call([
+        "gzip",
+        "-d",
+        "1000G_phase1.snps.high_confidence.hg38.vcf.gz"
+    ])
+
+    call([
+        "rm",
+        "1000G_phase1.snps.high_confidence.hg38.vcf.gz"
+    ])
+
+    call([
+        "wget",
+        "https://storage.googleapis.com/genomics-public-data/resources/broad/hg38/v0/1000G_omni2.5.hg38.vcf.gz"
+    ])
+
+    call([
+        "gzip",
+        "-d",
+        "1000G_omni2.5.hg38.vcf.gz"
+    ])
+
+    call([
+        "rm",
+        "1000G_omni2.5.hg38.vcf.gz"
     ])
 
     print ("\n")

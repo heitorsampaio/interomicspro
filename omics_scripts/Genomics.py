@@ -181,33 +181,33 @@ Recalibrate base quality scores!!
 
 run7 = call([
     "python3",
-    "../Sofware/gatk-4.0.9.0/gatk",
+    "../Software/gatk-4.0.9.0/gatk",
     "-T BaseRecalibrator",
     "-nct 20",
     "-R",(path),
     "-I",(args.SAMPLE_NAME+"markDuplicates.bam"),
-    "-knownSites dbsnp_147.vcf",
-    "-knownSites hsa_indels_hg38.vcf",
-    "-knownSites Mills_1kg_indels_hg38.vcf",
+    "-knownSites ../dbSNP/00-All.vcf.gz",
+    "-knownSites ../dbSNP/hsa_indels_hg38.vcf",
+    "-knownSites ../dbSNP/Mills_1kg_indels_hg38.vcf",
     "-o",(args.SAMPLE_NAME+"_recal_table.table")
 ])
 
 run8 = call([
     "python3",
-    "../Sofware/gatk-4.0.9.0/gatk",
+    "../Software/gatk-4.0.9.0/gatk",
     "-T BaseRecalibrator",
     "-nct 20",
     "-R",(path),
     "-I",(args.SAMPLE_NAME+"markDuplicates.bam"),
-    "-knownSites dbsnp_147.vcf",
-    "-knownSites hsa_indels_hg38.vcf",
-    "-knownSites Mills_1kg_indels_hg38.vcf",
+    "-knownSites ../dbSNP/00-All.vcf.gz",
+    "-knownSites ../dbSNP/hsa_indels_hg38.vcf",
+    "-knownSites ../dbSNP/Mills_1kg_indels_hg38.vcf",
     "-BQSR",(args.SAMPLE_NAME+"_recal_data.table")
 ])
 
 run9 = call([
     "python3",
-    "../Sofware/gatk-4.0.9.0/gatk",
+    "../Software/gatk-4.0.9.0/gatk",
     "-T AnalyzeCovariates",
     "-nct 20",
     "-R",(path),
@@ -218,7 +218,7 @@ run9 = call([
 
 run10 = call([
     "python3",
-    "../Sofware/gatk-4.0.9.0/gatk",
+    "../Software/gatk-4.0.9.0/gatk",
     "-T PrintReads",
     "-R",(path),
     "-I",(args.SAMPLE_NAME+"markDuplicates.bam"),
@@ -234,7 +234,7 @@ Perform local realignment around indels!!
 
 run11 = call([
     "python3",
-    "../Sofware/gatk-4.0.9.0/gatk",
+    "../Software/gatk-4.0.9.0/gatk",
     "-T RealignerTargetCreator",
     "-R",(path),
     "-I",(args.SAMPLE_NAME+"_recal_reads.bam"),
@@ -245,12 +245,12 @@ run11 = call([
 
 run12 = call([
     "python3",
-    "../Sofware/gatk-4.0.9.0/gatk",
+    "../Software/gatk-4.0.9.0/gatk",
     "-T IndelRealigner",
     "-R",(path),
     "-I",(args.SAMPLE_NAME+"_recal_reads.bam"),
-    "--known hsa_indels_hg38.vcf",
-    "--known Mills_1kg_indels_hg38.vcf",
+    "--known ../dbSNP/hsa_indels_hg38.vcf",
+    "--known ../dbSNP/Mills_1kg_indels_hg38.vcf",
     "-targetIntervals",(args.SAMPLE_NAME+"_forIdelRealigner.intervals"),
     "-o",(args.SAMPLE_NAME+"_recal_realigned.bam")
 ])
@@ -263,12 +263,12 @@ Check for sample cross-contamination!!
 
 run13 = call([
     "python3",
-    "../Sofware/gatk-4.0.9.0/gatk",
+    "../Software/gatk-4.0.9.0/gatk",
     "-T ContEst",
     "-R",(path),
     "-I",(args.SAMPLE_NAME+"_recal_realigned.bam"),
-    "--genotypes 1000G_omni2.5.hg38.vcf",
-    "-pf 1000G_phase1.snps.high_confidence.hg38.vcf",
+    "--genotypes ../dbSNP/1000G_omni2.5.hg38.vcf",
+    "-pf ../dbSNP/1000G_phase1.snps.high_confidence.hg38.vcf",
     "-isr INTERSECTION",
     "-br",(args.SAMPLE_NAME+"_contamination_full_report"),
     "-o",(args.SAMPLE_NAME+"_contamination_report.txt")
@@ -282,7 +282,7 @@ Call variants with HaplotypeCaller!!
 
 run14 = call([
     "python3",
-    "../Sofware/gatk-4.0.9.0/gatk",
+    "../Software/gatk-4.0.9.0/gatk",
     "-T HaplotypeCaller",
     "-nct 20",
     "-R",(path),
@@ -302,7 +302,7 @@ Calculate Depth and Coverage!!
 
 run15 = call([
     "python3",
-    "../Sofware/gatk-4.0.9.0/gatk",
+    "../Software/gatk-4.0.9.0/gatk",
     "-T SelectVariants",
     "-R",(path),
     "-V",(args.SAMPLE_NAME+"_raw_variants.vcf"),
@@ -312,7 +312,7 @@ run15 = call([
 
 run16 = call([
     "python3",
-    "../Sofware/gatk-4.0.9.0/gatk",
+    "../Software/gatk-4.0.9.0/gatk",
     "-T VariantFiltration",
     "-R",(path),
     "-V",(args.SAMPLE_NAME+"_raw_variants.vcf"),
@@ -325,7 +325,7 @@ run16 = call([
 
 run17 = call([
     "python3",
-    "../Sofware/gatk-4.0.9.0/gatk",
+    "../Software/gatk-4.0.9.0/gatk",
     "-T SelectVariants",
     "-R",(path),
     "-V",(args.SAMPLE_NAME+"_raw_variants.vcf"),
@@ -335,7 +335,7 @@ run17 = call([
 
 run18 = call([
     "python3",
-    "../Sofware/gatk-4.0.9.0/gatk",
+    "../Software/gatk-4.0.9.0/gatk",
     "-T VariantFiltration",
     "-R",(path),
     "-V",(args.SAMPLE_NAME+"_raw_variants.vcf"),
