@@ -6,6 +6,9 @@ import argparse
 
 #Generate an unmapped BAM from FASTQ or aligned BAM using PICARD
 
+#TODO buscar dentro da pasta todos os .fastq
+
+
 parser = argparse.ArgumentParser()
 parser.add_argument("-f1", dest="FASTQ", required=True,
                     help="FastQ filename")
@@ -49,6 +52,12 @@ retval = os.getcwd()
 print("Directory changes successfully %s" % retval)
 
 ##Generate an unmapped BAM from FASTQ or aligned BAM
+
+#TODO Rodar controle de qualidade
+
+#TODO FastqC
+#
+
 print('''
 [+][+][+]
 Generate an unmapped BAM from FASTQ or aligned BAM!!
@@ -97,12 +106,17 @@ run3 = call([
     "../Software/picard.jar", 
     "SamToFastq", 
     "I=",(args.SAMPLE_NAME+"_adapmark.bam"),
-    "FASTQ=",(args.SAMPLE_NAME+"_alignedBam.bam"),
+    "FASTQ=",(args.SAMPLE_NAME+"_alignedBam.fq"),
     "CLIPPING_ATTRIBUTE=XT",
     "CLIPPING_ACTION=2",
     "INTERLEAVE=true",
     "NON_PF=true",
     ])
+
+
+#TODO Controle de qualidade
+
+#TODO Excluir sequencias, antes do alinhamento
 
 homChoice = ['H.sapiens', 'human']
 musChoice = ['M.musculus']
@@ -129,7 +143,8 @@ run4 = call([
     "-M",
     "-t 20",
     "-p",(path),
-    (args.SAMPLE_NAME+"_alignedBam.bam")
+    (args.SAMPLE_NAME+"_alignedBam.fq"),
+    ">",(args.SAMPLE_NAME+"_aligned.sam")
 ])
 
 print('''
@@ -144,7 +159,7 @@ run5 = call([
     "-jar", 
     "../Software/picard.jar",
     "MergeBamAlignment",
-    "ALIGNED_BAM=",(args.SAMPLE_NAME+"_alignedBam.bam"),
+    "ALIGNED_BAM=",(args.SAMPLE_NAME+"_aligned.sam"),
     "UNMAPPED_BAM=",(args.OUTPUT),
     "OUTPUT=",(args.SAMPLE_NAME+"_merged.bam"),
     "R=",(path),
@@ -185,8 +200,8 @@ run7 = call([
     "-T BaseRecalibrator",
     "-nct 20",
     "-R",(path),
-    "-I",(args.SAMPLE_NAME+"markDuplicates.bam"),
-    "-knownSites ../dbSNP/00-All.vcf.gz",
+    "-I",(args.SAMPLE_NAME+"_markDuplicates.bam"),
+    "-knownSites ../dbSNP/00-All.vcf",
     "-knownSites ../dbSNP/hsa_indels_hg38.vcf",
     "-knownSites ../dbSNP/Mills_1kg_indels_hg38.vcf",
     "-o",(args.SAMPLE_NAME+"_recal_table.table")
@@ -198,7 +213,7 @@ run8 = call([
     "-T BaseRecalibrator",
     "-nct 20",
     "-R",(path),
-    "-I",(args.SAMPLE_NAME+"markDuplicates.bam"),
+    "-I",(args.SAMPLE_NAME+"_markDuplicates.bam"),
     "-knownSites ../dbSNP/00-All.vcf.gz",
     "-knownSites ../dbSNP/hsa_indels_hg38.vcf",
     "-knownSites ../dbSNP/Mills_1kg_indels_hg38.vcf",
@@ -221,7 +236,7 @@ run10 = call([
     "../Software/gatk-4.0.9.0/gatk",
     "-T PrintReads",
     "-R",(path),
-    "-I",(args.SAMPLE_NAME+"markDuplicates.bam"),
+    "-I",(args.SAMPLE_NAME+"_markDuplicates.bam"),
     "-BQSR",(args.SAMPLE_NAME+"_recal_data.table"),
     "-o",(args.SAMPLE_NAME+"_recal_reads.bam")
 ])
@@ -238,8 +253,8 @@ run11 = call([
     "-T RealignerTargetCreator",
     "-R",(path),
     "-I",(args.SAMPLE_NAME+"_recal_reads.bam"),
-    "--known hsa_indels_hg38.vcf",
-    "--known Mills_1kg_indels_hg38.vcf",
+    "--known ../dbSNP/hsa_indels_hg38.vcf",
+    "--known ../dbSNP/Mills_1kg_indels_hg38.vcf",
     "-o",(args.SAMPLE_NAME+"_forIdelRealigner.intervals")
 ])
 
@@ -379,7 +394,7 @@ run21 = call([
     "--in-place=.bak",
     "/lowGQ/d",
     (args.SAMPLE_NAME+"_passed_snps.recode.vcf")
-])
+])  
 
 run22 = call([
     "sed",
