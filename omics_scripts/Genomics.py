@@ -3,8 +3,14 @@ from subprocess import call
 import os
 import sys
 import argparse
+import errno
+
+GLOBAL_PATH='/Users/heitorsampaio/Documents/interomicspro/'
 
 #Generate an unmapped BAM from FASTQ or aligned BAM using PICARD
+
+#TODO buscar dentro da pasta todos os .fastq
+
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-f1", dest="FASTQ", required=True,
@@ -36,11 +42,15 @@ print(args.SAMPLE_NAME)
 print(args.LIB_NAME)
 print(args.PLATFORM)
 
-anal = "./Analysis/"
+anal = GLOBAL_PATH+"Analysis/"
 
-os.mkdir( anal, 0o755 )
+try:
+    os.mkdir(anal)
+except OSError as exc:
+    if exc.errno != errno.EEXIST:
+        raise
+    pass
 
-print("Analysis path is created")
 
 os.chdir( anal )
 
@@ -49,6 +59,12 @@ retval = os.getcwd()
 print("Directory changes successfully %s" % retval)
 
 ##Generate an unmapped BAM from FASTQ or aligned BAM
+
+#TODO Rodar controle de qualidade
+
+#TODO FastqC
+#
+
 print('''
 [+][+][+]
 Generate an unmapped BAM from FASTQ or aligned BAM!!
@@ -59,7 +75,7 @@ run1 = call([
     "java", 
     "-Xmx64G", 
     "-jar", 
-    "../Software/picard.jar", 
+    GLOBAL_PATH+"Software/picard.jar", 
     "FastqToSam", 
     "FASTQ=",(args.FASTQ) , 
     "FASTQ2=", (args.FASTQ2), 
@@ -81,7 +97,7 @@ run2 = call([
     "java", 
     "-Xmx64G", 
     "-jar", 
-    "../Software/picard.jar", 
+    GLOBAL_PATH+"Software/picard.jar", 
     "MarkIlluminaAdapters", 
     "I=",(args.OUTPUT),
     "O=",(args.SAMPLE_NAME+"_adapmark.bam"),
@@ -94,15 +110,20 @@ run3 = call([
     "java", 
     "-Xmx64G", 
     "-jar", 
-    "../Software/picard.jar", 
+    GLOBAL_PATH+"Software/picard.jar", 
     "SamToFastq", 
     "I=",(args.SAMPLE_NAME+"_adapmark.bam"),
-    "FASTQ=",(args.SAMPLE_NAME+"_alignedBam.bam"),
+    "FASTQ=",(args.SAMPLE_NAME+"_alignedBam.fq"),
     "CLIPPING_ATTRIBUTE=XT",
     "CLIPPING_ACTION=2",
     "INTERLEAVE=true",
     "NON_PF=true",
     ])
+
+
+#TODO Controle de qualidade
+
+#TODO Excluir sequencias, antes do alinhamento
 
 homChoice = ['H.sapiens', 'human']
 musChoice = ['M.musculus']
@@ -115,13 +136,13 @@ Which reference genome you want to use? [H.sapiens/M.musculus/R.norvegicus/D.mel
 :''' )
 
 if genome in homChoice:
-    path = ("../Genomes/Homo_sapiens/NCBI/build37.2/Sequence/BWAIndex/genome.fa")
+    path = (GLOBAL_PATH+"Genomes/Homo_sapiens/NCBI/build37.2/Sequence/BWAIndex/genome.fa")
 elif genome in musChoice:
-    path = ("../Genomes/Mus_musculus/NCBI/build37.2/Sequence/BWAIndex/genome.fa")
+    path = (GLOBAL_PATH+"Genomes/Mus_musculus/NCBI/build37.2/Sequence/BWAIndex/genome.fa")
 elif genome in ratChoice:
-    path = ("../Genomes/Rattus_norvegicus/NCBI/Rnor_6.0/Sequence/BWAIndex/genome.fa")
+    path = (GLOBAL_PATH+"Genomes/Rattus_norvegicus/NCBI/Rnor_6.0/Sequence/BWAIndex/genome.fa")
 elif genome in droChoice:
-    path = ("../Genomes/Drosophila_melanogaster/NCBI/build5.41/Sequence/BWAIndex/genome.fa")
+    path = (GLOBAL_PATH+"Genomes/Drosophila_melanogaster/NCBI/build5.41/Sequence/BWAIndex/genome.fa")
 
 run4 = call([
     "bwa",
@@ -129,7 +150,8 @@ run4 = call([
     "-M",
     "-t 20",
     "-p",(path),
-    (args.SAMPLE_NAME+"_alignedBam.bam")
+    (args.SAMPLE_NAME+"_alignedBam.fq"),
+    ">",(args.SAMPLE_NAME+"_aligned.sam")
 ])
 
 print('''
@@ -142,9 +164,9 @@ run5 = call([
     "java", 
     "-Xmx64G", 
     "-jar", 
-    "../Software/picard.jar",
+    GLOBAL_PATH+"Software/picard.jar",
     "MergeBamAlignment",
-    "ALIGNED_BAM=",(args.SAMPLE_NAME+"_alignedBam.bam"),
+    "ALIGNED_BAM=",(args.SAMPLE_NAME+"_aligned.sam"),
     "UNMAPPED_BAM=",(args.OUTPUT),
     "OUTPUT=",(args.SAMPLE_NAME+"_merged.bam"),
     "R=",(path),
@@ -163,7 +185,7 @@ run6 = call([
     "java",
     "-Xmx64g",
     "-jar",
-    "../Software/picard.jar",
+    GLOBAL_PATH+"Software/picard.jar",
     "MarkDuplicates",
     "INPUT=",(args.SAMPLE_NAME+"_merged.bam"),
     "OUTPUT=",(args.SAMPLE_NAME+"_markDuplicates.bam"),
@@ -181,33 +203,33 @@ Recalibrate base quality scores!!
 
 run7 = call([
     "python3",
-    "../Software/gatk-4.0.9.0/gatk",
+    GLOBAL_PATH+"Software/gatk-4.0.9.0/gatk",
     "-T BaseRecalibrator",
     "-nct 20",
     "-R",(path),
-    "-I",(args.SAMPLE_NAME+"markDuplicates.bam"),
-    "-knownSites ../dbSNP/00-All.vcf.gz",
-    "-knownSites ../dbSNP/hsa_indels_hg38.vcf",
-    "-knownSites ../dbSNP/Mills_1kg_indels_hg38.vcf",
+    "-I",(args.SAMPLE_NAME+"_markDuplicates.bam"),
+    "-knownSites ",GLOBAL_PATH+"dbSNP/00-All.vcf",
+    "-knownSites ",GLOBAL_PATH+"dbSNP/hsa_indels_hg38.vcf",
+    "-knownSites ",GLOBAL_PATH+"dbSNP/Mills_1kg_indels_hg38.vcf",
     "-o",(args.SAMPLE_NAME+"_recal_table.table")
 ])
 
 run8 = call([
     "python3",
-    "../Software/gatk-4.0.9.0/gatk",
+    GLOBAL_PATH+"Software/gatk-4.0.9.0/gatk",
     "-T BaseRecalibrator",
     "-nct 20",
     "-R",(path),
-    "-I",(args.SAMPLE_NAME+"markDuplicates.bam"),
-    "-knownSites ../dbSNP/00-All.vcf.gz",
-    "-knownSites ../dbSNP/hsa_indels_hg38.vcf",
-    "-knownSites ../dbSNP/Mills_1kg_indels_hg38.vcf",
+    "-I",(args.SAMPLE_NAME+"_markDuplicates.bam"),
+    "-knownSites ",GLOBAL_PATH+"dbSNP/00-All.vcf.gz",
+    "-knownSites ",GLOBAL_PATH+"dbSNP/hsa_indels_hg38.vcf",
+    "-knownSites ",GLOBAL_PATH+"dbSNP/Mills_1kg_indels_hg38.vcf",
     "-BQSR",(args.SAMPLE_NAME+"_recal_data.table")
 ])
 
 run9 = call([
     "python3",
-    "../Software/gatk-4.0.9.0/gatk",
+    GLOBAL_PATH+"Software/gatk-4.0.9.0/gatk",
     "-T AnalyzeCovariates",
     "-nct 20",
     "-R",(path),
@@ -218,10 +240,10 @@ run9 = call([
 
 run10 = call([
     "python3",
-    "../Software/gatk-4.0.9.0/gatk",
+    GLOBAL_PATH+"Software/gatk-4.0.9.0/gatk",
     "-T PrintReads",
     "-R",(path),
-    "-I",(args.SAMPLE_NAME+"markDuplicates.bam"),
+    "-I",(args.SAMPLE_NAME+"_markDuplicates.bam"),
     "-BQSR",(args.SAMPLE_NAME+"_recal_data.table"),
     "-o",(args.SAMPLE_NAME+"_recal_reads.bam")
 ])
@@ -234,23 +256,23 @@ Perform local realignment around indels!!
 
 run11 = call([
     "python3",
-    "../Software/gatk-4.0.9.0/gatk",
+    GLOBAL_PATH+"Software/gatk-4.0.9.0/gatk",
     "-T RealignerTargetCreator",
     "-R",(path),
     "-I",(args.SAMPLE_NAME+"_recal_reads.bam"),
-    "--known hsa_indels_hg38.vcf",
-    "--known Mills_1kg_indels_hg38.vcf",
+    "--known",GLOBAL_PATH+"dbSNP/hsa_indels_hg38.vcf",
+    "--known",GLOBAL_PATH+"dbSNP/Mills_1kg_indels_hg38.vcf",
     "-o",(args.SAMPLE_NAME+"_forIdelRealigner.intervals")
 ])
 
 run12 = call([
     "python3",
-    "../Software/gatk-4.0.9.0/gatk",
+   GLOBAL_PATH+"Software/gatk-4.0.9.0/gatk",
     "-T IndelRealigner",
     "-R",(path),
     "-I",(args.SAMPLE_NAME+"_recal_reads.bam"),
-    "--known ../dbSNP/hsa_indels_hg38.vcf",
-    "--known ../dbSNP/Mills_1kg_indels_hg38.vcf",
+    "--known",GLOBAL_PATH+"dbSNP/hsa_indels_hg38.vcf",
+    "--known",GLOBAL_PATH+"dbSNP/Mills_1kg_indels_hg38.vcf",
     "-targetIntervals",(args.SAMPLE_NAME+"_forIdelRealigner.intervals"),
     "-o",(args.SAMPLE_NAME+"_recal_realigned.bam")
 ])
@@ -263,12 +285,12 @@ Check for sample cross-contamination!!
 
 run13 = call([
     "python3",
-    "../Software/gatk-4.0.9.0/gatk",
+   GLOBAL_PATH+"Software/gatk-4.0.9.0/gatk",
     "-T ContEst",
     "-R",(path),
     "-I",(args.SAMPLE_NAME+"_recal_realigned.bam"),
-    "--genotypes ../dbSNP/1000G_omni2.5.hg38.vcf",
-    "-pf ../dbSNP/1000G_phase1.snps.high_confidence.hg38.vcf",
+    "--genotypes ",GLOBAL_PATH+"dbSNP/1000G_omni2.5.hg38.vcf",
+    "-pf ",GLOBAL_PATH+"dbSNP/1000G_phase1.snps.high_confidence.hg38.vcf",
     "-isr INTERSECTION",
     "-br",(args.SAMPLE_NAME+"_contamination_full_report"),
     "-o",(args.SAMPLE_NAME+"_contamination_report.txt")
@@ -282,7 +304,7 @@ Call variants with HaplotypeCaller!!
 
 run14 = call([
     "python3",
-    "../Software/gatk-4.0.9.0/gatk",
+   GLOBAL_PATH+"Software/gatk-4.0.9.0/gatk",
     "-T HaplotypeCaller",
     "-nct 20",
     "-R",(path),
@@ -302,7 +324,7 @@ Calculate Depth and Coverage!!
 
 run15 = call([
     "python3",
-    "../Software/gatk-4.0.9.0/gatk",
+   GLOBAL_PATH+"Software/gatk-4.0.9.0/gatk",
     "-T SelectVariants",
     "-R",(path),
     "-V",(args.SAMPLE_NAME+"_raw_variants.vcf"),
@@ -312,7 +334,7 @@ run15 = call([
 
 run16 = call([
     "python3",
-    "../Software/gatk-4.0.9.0/gatk",
+   GLOBAL_PATH+"Software/gatk-4.0.9.0/gatk",
     "-T VariantFiltration",
     "-R",(path),
     "-V",(args.SAMPLE_NAME+"_raw_variants.vcf"),
@@ -325,7 +347,7 @@ run16 = call([
 
 run17 = call([
     "python3",
-    "../Software/gatk-4.0.9.0/gatk",
+   GLOBAL_PATH+"Software/gatk-4.0.9.0/gatk",
     "-T SelectVariants",
     "-R",(path),
     "-V",(args.SAMPLE_NAME+"_raw_variants.vcf"),
@@ -335,7 +357,7 @@ run17 = call([
 
 run18 = call([
     "python3",
-    "../Software/gatk-4.0.9.0/gatk",
+   GLOBAL_PATH+"Software/gatk-4.0.9.0/gatk",
     "-T VariantFiltration",
     "-R",(path),
     "-V",(args.SAMPLE_NAME+"_raw_variants.vcf"),
@@ -379,7 +401,7 @@ run21 = call([
     "--in-place=.bak",
     "/lowGQ/d",
     (args.SAMPLE_NAME+"_passed_snps.recode.vcf")
-])
+])  
 
 run22 = call([
     "sed",
@@ -398,7 +420,7 @@ run23 = call([
     "java",
     "-Xmx64g",
     "-jar",
-    "../Software/picard.jar",
+   GLOBAL_PATH+"Software/picard.jar",
     "CollectVariantCallingMetrics",
     "INPUT=",(args.SAMPLE_NAME+"_passed_snps.recode.vcf"),
     "OUTPUT=",(args.SAMPLE_NAME+"_passed_snps.recode.vcf"),
@@ -409,7 +431,7 @@ run24 = call([
     "java",
     "-Xmx64g",
     "-jar",
-    "../Software/picard.jar",
+   GLOBAL_PATH+"Software/picard.jar",
     "CollectVariantCallingMetrics",
     "INPUT=",(args.SAMPLE_NAME+"_passed_indels.recode.vcf"),
     "OUTPUT=",(args.SAMPLE_NAME+"_passed_indels.recode.vcf"),

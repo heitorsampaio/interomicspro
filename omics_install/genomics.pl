@@ -6,7 +6,7 @@ use Archive::Extract;
 use Archive::Tar;
 use File::Copy;
 
-my $SoftwareDir = './Software/';
+my $SoftwareDir = '../Software/';
 mkdir($SoftwareDir, 0700) unless(-d $SoftwareDir);
 chdir($SoftwareDir) or die "can't chdir $SoftwareDir\n";
 
@@ -104,3 +104,49 @@ print "\n[+] Installing BWA ...\n\n";
 
 my $BWA = 'sudo apt-get install bwa';
 system($BWA);
+
+#FASTQ-MCF download and install
+
+print "\n[+] Installing FASTQ-MCF ... \n\n";
+
+my $DOWNMCF = "sudo apt-get install ea-utils";
+system ($DOWNMCF);
+
+#MuTect download and install
+
+print "\n[+] Installing muTect ... \n\n";
+
+my $MuTect = "http://software.broadinstitute.org/cancer/cga/sites/default/files/data/tools/mutect/muTect-1.1.4-bin.zip";
+system "wget $MuTect";
+
+my $MuTectzip = Archive::Extract->new( archive => 'muTect-1.1.4-bin.zip' );
+    $MuTectzip->is_zip;
+    my $MuTectunzip = $MuTectzip->extract or die $MuTectzip->error;
+
+my $MuTectfile = 'muTect-1.1.4-bin.zip';
+unlink $MuTectfile;
+
+print "\n[+] Installing bedtools ... \n\n";
+
+my $bedtools = "https://github.com/arq5x/bedtools2/archive/v2.27.1.zip";
+system "wget $bedtools";
+
+my $bedtoolszip = Archive::Extract->new( archive => 'v2.27.1.zip' );
+    $bedtoolszip->is_zip;
+    my $bedtoolsunzip = $bedtoolszip->extract or die $bedtoolszip->error;
+
+my $bedtoolsfile = 'v2.27.1.zip';
+unlink $bedtoolsfile;
+
+my $bedtoolspath = "./bedtools2-2.27.1/";
+chdir ($bedtoolspath) or die "can't chdir $bedtoolspath\n";
+
+my $bedtoolsinstall = "sudo make && make install";
+system ($bedtoolsinstall);
+chdir($SoftwareDir) or die "can't chdir $SoftwareDir\n";
+
+#BamTools installing
+
+print "\n[+] Installing BamTools ... \n\n";
+my $BamTools = "sudo apt-get install bamtools";
+system ($BamTools);

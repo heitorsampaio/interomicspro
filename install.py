@@ -3,6 +3,9 @@ from subprocess import call
 import os
 import sys
 
+GLOBAL_PATH='/Users/heitorsampaio/Documents/interomicspro/';
+
+
 b = ('''
 ██████╗  █████╗ ████████╗ ██████╗ ███████╗███╗   ██╗
 ██╔══██╗██╔══██╗╚══██╔══╝██╔════╝ ██╔════╝████╗  ██║
@@ -54,7 +57,7 @@ if EnterOp == "1":
     ])
     call([
         "perl",
-        "./omics_install/genomics.pl"
+        GLOBAL_PATH+"omics_install/genomics.pl"
     ])
     print ("\n")
     input("[*] Back To Menu (Press Enter...) ")
@@ -72,7 +75,7 @@ elif EnterOp == "2":
     ])
     call([
         "perl",
-        "./omics_install/transcriptomics.pl"
+        GLOBAL_PATH+"omics_install/transcriptomics.pl"
     ])
     print ("\n")
     input("[*] Back To Menu (Press Enter...) ")
@@ -90,7 +93,7 @@ elif EnterOp == "3":
     ])
     call([
         "perl",
-        "./omics_install/proteomics.pl"
+        GLOBAL_PATH+"omics_install/proteomics.pl"
     ])
     print ("\n")
     input("[*] Back To Menu (Press Enter...) ")
@@ -108,7 +111,7 @@ elif EnterOp == "4":
     ])
     call([
         "python3",
-        "./omics_install/genome_download.py"
+        GLOBAL_PATH+"omics_install/genome_download.py"
     ])
     print ("\n")
     input("[*] Back To Menu (Press Enter...) ")
@@ -124,8 +127,8 @@ elif EnterOp == "5":
         "perl",
         "libarchive-extract-perl"
     ])
-    dbSnp = "./dbSNP/"
-    home = "../"
+    dbSnp = GLOBAL_PATH+"dbSNP/"
+    home = GLOBAL_PATH
     os.mkdir( dbSnp, 0o755 )
 
     print("dbSNP path is created")
@@ -243,22 +246,22 @@ elif EnterOp == "6":
     ])
     call([
         "perl",
-        "./omics_install/genomics.pl"
+        GLOBAL_PATH+"omics_install/genomics.pl"
     ])
     call([
         "perl",
-        "./omics_install/transcriptomics.pl"
+        GLOBAL_PATH+"omics_install/transcriptomics.pl"
     ])
     call([
         "perl",
-        "./omics_install/proteomics.pl"
+        GLOBAL_PATH+"omics_install/proteomics.pl"
     ])
     call([
         "python3",
-        "./omics_install/genome_download.py"
+        GLOBAL_PATH+"omics_install/genome_download.py"
     ])
 
-    dbSnp = "./dbSNP/"
+    dbSnp = GLOBAL_PATH+"dbSNP/"
     os.mkdir( dbSnp, 0o755 )
 
     print("dbSNP path is created")
