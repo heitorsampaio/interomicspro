@@ -38,10 +38,11 @@ Enter :
 ## Requirements
 - Python 3 or higher
 
-## Install
+## Install && ENV Configuration
 ```bash
 git clone https://github.com/heitorsampaio/interomicspro.git
 cd interomicspro
+perl configure.pl
 python3 install.py 
 ```
 ## Usage
