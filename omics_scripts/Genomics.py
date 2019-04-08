@@ -208,9 +208,15 @@ run7 = call([
     "-nct 20",
     "-R",(path),
     "-I",(args.SAMPLE_NAME+"_markDuplicates.bam"),
+<<<<<<< HEAD
     "-knownSites ",GLOBAL_PATH+"dbSNP/00-All.vcf",
     "-knownSites ",GLOBAL_PATH+"dbSNP/hsa_indels_hg38.vcf",
     "-knownSites ",GLOBAL_PATH+"dbSNP/Mills_1kg_indels_hg38.vcf",
+=======
+    "-knownSites ../dbSNP/00-All.vcf",
+    "-knownSites ../dbSNP/hsa_indels_hg38.vcf",
+    "-knownSites ../dbSNP/Mills_1kg_indels_hg38.vcf",
+>>>>>>> a8d8c2af05c51273f950755f29f5a9c803ac7c10
     "-o",(args.SAMPLE_NAME+"_recal_table.table")
 ])
 
@@ -221,9 +227,15 @@ run8 = call([
     "-nct 20",
     "-R",(path),
     "-I",(args.SAMPLE_NAME+"_markDuplicates.bam"),
+<<<<<<< HEAD
     "-knownSites ",GLOBAL_PATH+"dbSNP/00-All.vcf.gz",
     "-knownSites ",GLOBAL_PATH+"dbSNP/hsa_indels_hg38.vcf",
     "-knownSites ",GLOBAL_PATH+"dbSNP/Mills_1kg_indels_hg38.vcf",
+=======
+    "-knownSites ../dbSNP/00-All.vcf.gz",
+    "-knownSites ../dbSNP/hsa_indels_hg38.vcf",
+    "-knownSites ../dbSNP/Mills_1kg_indels_hg38.vcf",
+>>>>>>> a8d8c2af05c51273f950755f29f5a9c803ac7c10
     "-BQSR",(args.SAMPLE_NAME+"_recal_data.table")
 ])
 
@@ -260,8 +272,13 @@ run11 = call([
     "-T RealignerTargetCreator",
     "-R",(path),
     "-I",(args.SAMPLE_NAME+"_recal_reads.bam"),
+<<<<<<< HEAD
     "--known",GLOBAL_PATH+"dbSNP/hsa_indels_hg38.vcf",
     "--known",GLOBAL_PATH+"dbSNP/Mills_1kg_indels_hg38.vcf",
+=======
+    "--known ../dbSNP/hsa_indels_hg38.vcf",
+    "--known ../dbSNP/Mills_1kg_indels_hg38.vcf",
+>>>>>>> a8d8c2af05c51273f950755f29f5a9c803ac7c10
     "-o",(args.SAMPLE_NAME+"_forIdelRealigner.intervals")
 ])
 
